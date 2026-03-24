@@ -24,10 +24,6 @@
       --border: 3px solid #000;
     }
 
-    html, body {
-      height: 100%;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       background: var(--white);
@@ -41,9 +37,7 @@
     }
 
     /* ── Header ── */
-    .header {
-      margin-bottom: 32px;
-    }
+    .header { margin-bottom: 32px; }
 
     .header-eyebrow {
       display: inline-block;
@@ -83,9 +77,7 @@
     }
 
     .upload-zone:hover,
-    .upload-zone.drag-over {
-      background: var(--orange);
-    }
+    .upload-zone.drag-over { background: var(--orange); }
 
     .upload-zone.drag-over {
       outline: 3px dashed var(--black);
@@ -112,10 +104,6 @@
       margin: 0 auto 16px;
     }
 
-    .upload-arrow svg {
-      fill: var(--yellow);
-    }
-
     .upload-text {
       font-weight: 900;
       font-size: 1.1rem;
@@ -130,7 +118,6 @@
     /* ── Steps ── */
     .steps {
       display: flex;
-      gap: 0;
       margin-top: 20px;
       border: var(--border);
     }
@@ -144,9 +131,7 @@
       gap: 10px;
     }
 
-    .step:last-child {
-      border-right: none;
-    }
+    .step:last-child { border-right: none; }
 
     .step-num {
       display: flex;
@@ -174,9 +159,7 @@
       margin-top: 32px;
     }
 
-    .preview-section.visible {
-      display: block;
-    }
+    .preview-section.visible { display: block; }
 
     .section-label {
       font-size: 0.75rem;
@@ -186,35 +169,80 @@
       margin-bottom: 10px;
     }
 
+    /* ── Canvas ── */
     .canvas-wrapper {
       border: var(--border);
       width: 100%;
       aspect-ratio: 1 / 1;
       overflow: hidden;
       position: relative;
-      background: var(--gray-light);
+      background: #222;
+      touch-action: none;
     }
 
     canvas {
       display: block;
       width: 100%;
       height: 100%;
+      cursor: grab;
     }
 
-    /* ── Spinner overlay ── */
+    canvas.dragging { cursor: grabbing; }
+
+    /* ── Reposition hint ── */
+    .reposition-hint {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 10px;
+      gap: 12px;
+    }
+
+    .hint-text {
+      font-size: 0.78rem;
+      color: var(--gray-dark);
+      flex: 1;
+    }
+
+    .zoom-controls {
+      display: flex;
+      gap: 0;
+      border: var(--border);
+      flex-shrink: 0;
+    }
+
+    .zoom-btn {
+      width: 36px;
+      height: 36px;
+      background: var(--white);
+      border: none;
+      border-right: var(--border);
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.1s;
+      line-height: 1;
+    }
+
+    .zoom-btn:last-child { border-right: none; }
+    .zoom-btn:hover { background: var(--yellow); }
+    .zoom-btn:active { background: var(--orange); }
+
+    /* ── Spinner ── */
     .spinner-overlay {
       position: absolute;
       inset: 0;
       background: rgba(255,255,255,0.75);
-      display: flex;
       align-items: center;
       justify-content: center;
       display: none;
     }
 
-    .spinner-overlay.active {
-      display: flex;
-    }
+    .spinner-overlay.active { display: flex; }
 
     .spinner {
       width: 36px;
@@ -225,11 +253,9 @@
       animation: spin 0.7s linear infinite;
     }
 
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spin { to { transform: rotate(360deg); } }
 
-    /* ── Action buttons ── */
+    /* ── Buttons ── */
     .actions {
       display: flex;
       gap: 12px;
@@ -245,10 +271,7 @@
       border: var(--border);
       cursor: pointer;
       transition: background 0.12s ease, box-shadow 0.1s ease;
-      position: relative;
       text-align: center;
-      text-decoration: none;
-      display: inline-block;
     }
 
     .btn:focus-visible {
@@ -277,9 +300,7 @@
       color: var(--black);
     }
 
-    .btn-secondary:hover {
-      background: var(--gray-light);
-    }
+    .btn-secondary:hover { background: var(--gray-light); }
 
     /* ── Footer ── */
     .footer {
@@ -293,83 +314,70 @@
 
     /* ── Responsive ── */
     @media (max-width: 420px) {
-      body {
-        padding: 20px 14px 40px;
-      }
+      body { padding: 20px 14px 40px; }
 
-      .steps {
-        flex-direction: column;
-      }
+      .steps { flex-direction: column; }
 
       .step {
         border-right: none;
         border-bottom: var(--border);
       }
 
-      .step:last-child {
-        border-bottom: none;
-      }
+      .step:last-child { border-bottom: none; }
 
-      .actions {
-        flex-direction: column;
-      }
+      .actions { flex-direction: column; }
     }
   </style>
 </head>
 <body>
   <div class="container">
 
-    <!-- Header -->
     <div class="header">
       <span class="header-eyebrow">Service Design Gem Berlin</span>
       <h1>Create Your<br>Event Banner</h1>
-      <p class="subtitle">Upload a photo, get your personalised banner — ready to share on Instagram, LinkedIn, and beyond.</p>
+      <p class="subtitle">Upload your photo and get a personalised banner — ready to share on Instagram, LinkedIn, and beyond.</p>
     </div>
 
-    <!-- Upload zone -->
-    <div class="upload-zone" id="uploadZone" role="button" aria-label="Upload your photo">
+    <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="Upload your photo">
       <input type="file" id="fileInput" accept="image/*" aria-label="Select image file">
       <div class="upload-arrow" aria-hidden="true">
-        <svg width="22" height="22" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path d="M12 3L12 16M12 3L7 8M12 3L17 8M4 20H20" stroke="#fdf45a" stroke-width="2.5" stroke-linecap="square" fill="none"/>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 3L12 16M12 3L7 8M12 3L17 8M4 20H20" stroke="#fdf45a" stroke-width="2.5" stroke-linecap="square"/>
         </svg>
       </div>
       <div class="upload-text">Upload your photo</div>
       <div class="upload-hint">Drag &amp; drop or click to browse &nbsp;·&nbsp; JPG, PNG, WEBP</div>
     </div>
 
-    <!-- Step indicators -->
     <div class="steps" aria-hidden="true">
-      <div class="step">
-        <div class="step-num">1</div>
-        <div class="step-label">Upload your photo</div>
-      </div>
-      <div class="step">
-        <div class="step-num">2</div>
-        <div class="step-label">Preview your banner</div>
-      </div>
-      <div class="step">
-        <div class="step-num">3</div>
-        <div class="step-label">Download &amp; share</div>
-      </div>
+      <div class="step"><div class="step-num">1</div><div class="step-label">Upload your photo</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-label">Adjust &amp; preview</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-label">Download &amp; share</div></div>
     </div>
 
-    <!-- Preview -->
     <div class="preview-section" id="previewSection" aria-live="polite">
       <div class="section-label">Your banner</div>
-      <div class="canvas-wrapper">
+      <div class="canvas-wrapper" id="canvasWrapper">
         <canvas id="bannerCanvas" width="1080" height="1080" aria-label="Generated banner preview"></canvas>
         <div class="spinner-overlay" id="spinnerOverlay" aria-hidden="true">
           <div class="spinner"></div>
         </div>
       </div>
+
+      <div class="reposition-hint">
+        <span class="hint-text">Drag to reposition &nbsp;·&nbsp; Scroll or pinch to zoom</span>
+        <div class="zoom-controls" aria-label="Zoom controls">
+          <button class="zoom-btn" id="zoomOut" aria-label="Zoom out">−</button>
+          <button class="zoom-btn" id="zoomIn"  aria-label="Zoom in">+</button>
+        </div>
+      </div>
+
       <div class="actions">
-        <button class="btn btn-primary" id="downloadBtn">Download Banner</button>
+        <button class="btn btn-primary"   id="downloadBtn">Download Banner</button>
         <button class="btn btn-secondary" id="changePhotoBtn">Change Photo</button>
       </div>
     </div>
 
-    <!-- Footer -->
     <div class="footer">
       Your photo stays on your device and is never uploaded to any server.
     </div>
@@ -379,82 +387,94 @@
   <script>
     // ─────────────────────────────────────────────────────────────────────────
     //  CONFIGURATION
-    //  Replace OVERLAY_URL with the path to your Figma-exported PNG.
-    //  The overlay should be 1080×1080px with a transparent background.
-    //  You can use a relative path (e.g. './overlay.png') or an absolute URL.
+    //
+    //  OVERLAY_URL  — path/URL to your Figma-exported PNG (1080×1080, transparent bg)
+    //
+    //  CROP_X/Y     — top-left corner of the photo area in canvas pixels.
+    //                 Default is centred. Adjust if your overlay hole is off-centre.
+    //
+    //  CROP_W/H     — size of the photo area in canvas pixels (549.1 × 549.1).
     // ─────────────────────────────────────────────────────────────────────────
-    const OVERLAY_URL = './overlay.png';
+    const OVERLAY_URL       = './overlay.png';
     const DOWNLOAD_FILENAME = 'sdgberlin-banner.png';
+
+    const SIZE   = 1080;
+    const CROP_W = 549.1;
+    const CROP_H = 549.1;
+    const CROP_X = (SIZE - CROP_W) / 2;   // 265.45 — centred
+    const CROP_Y = (SIZE - CROP_H) / 2;   // 265.45 — centred
     // ─────────────────────────────────────────────────────────────────────────
 
-    const canvas       = document.getElementById('bannerCanvas');
-    const ctx          = canvas.getContext('2d');
-    const fileInput    = document.getElementById('fileInput');
-    const uploadZone   = document.getElementById('uploadZone');
+    const canvas         = document.getElementById('bannerCanvas');
+    const ctx            = canvas.getContext('2d');
+    const fileInput      = document.getElementById('fileInput');
+    const uploadZone     = document.getElementById('uploadZone');
     const previewSection = document.getElementById('previewSection');
-    const downloadBtn  = document.getElementById('downloadBtn');
+    const downloadBtn    = document.getElementById('downloadBtn');
     const changePhotoBtn = document.getElementById('changePhotoBtn');
     const spinnerOverlay = document.getElementById('spinnerOverlay');
+    const zoomInBtn      = document.getElementById('zoomIn');
+    const zoomOutBtn     = document.getElementById('zoomOut');
 
-    const SIZE = 1080;
     let overlayImage = null;
     let userPhoto    = null;
 
-    // ── Preload overlay image ─────────────────────────────────────────────
-    const overlayImg = new Image();
-    overlayImg.crossOrigin = 'anonymous';
-    overlayImg.onload  = () => { overlayImage = overlayImg; if (userPhoto) renderBanner(); };
-    overlayImg.onerror = () => console.warn('[Banner] Overlay not found at:', OVERLAY_URL, '— a placeholder will be drawn instead.');
-    overlayImg.src = OVERLAY_URL;
+    // ── Pan / zoom state ──────────────────────────────────────────────────
+    let imgScale   = 1;
+    let imgOffsetX = 0;   // offset from centre of crop area (canvas px)
+    let imgOffsetY = 0;
 
-    // ── Draw image cover-fit centred on canvas ────────────────────────────
-    function drawCoverFit(img) {
-      const imgRatio    = img.naturalWidth / img.naturalHeight;
-      const canvasRatio = SIZE / SIZE; // always 1 for square
-
-      let drawW, drawH, drawX, drawY;
-
-      if (imgRatio > canvasRatio) {
-        // Image is wider than canvas — fit height, crop sides
-        drawH = SIZE;
-        drawW = img.naturalWidth * (SIZE / img.naturalHeight);
-        drawX = (SIZE - drawW) / 2;
-        drawY = 0;
-      } else {
-        // Image is taller — fit width, crop top/bottom
-        drawW = SIZE;
-        drawH = img.naturalHeight * (SIZE / img.naturalWidth);
-        drawX = 0;
-        drawY = (SIZE - drawH) / 2;
-      }
-
-      ctx.drawImage(img, drawX, drawY, drawW, drawH);
+    function minScale(img) {
+      // Smallest scale that still covers the crop area (object-fit: cover)
+      return Math.max(CROP_W / img.naturalWidth, CROP_H / img.naturalHeight);
     }
 
-    // ── Draw placeholder overlay (shown when overlay.png is not set yet) ──
-    function drawPlaceholderOverlay() {
-      // Semi-transparent brand colour stripe at the bottom
-      ctx.fillStyle = 'rgba(253, 244, 90, 0.88)';
-      ctx.fillRect(0, SIZE - 200, SIZE, 200);
-
-      ctx.fillStyle = '#000';
-      ctx.font      = `900 ${SIZE * 0.055}px Inter, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('SERVICE DESIGN GEM BERLIN', SIZE / 2, SIZE - 120);
-
-      ctx.font      = `700 ${SIZE * 0.03}px Inter, sans-serif`;
-      ctx.fillText('Replace overlay.png with your Figma export', SIZE / 2, SIZE - 60);
+    function clampOffset(img, scale) {
+      const drawW  = img.naturalWidth  * scale;
+      const drawH  = img.naturalHeight * scale;
+      const maxX   = Math.max(0, (drawW - CROP_W) / 2);
+      const maxY   = Math.max(0, (drawH - CROP_H) / 2);
+      imgOffsetX   = Math.max(-maxX, Math.min(maxX, imgOffsetX));
+      imgOffsetY   = Math.max(-maxY, Math.min(maxY, imgOffsetY));
     }
 
-    // ── Composite and render to canvas ───────────────────────────────────
+    function applyZoom(factor, pivot) {
+      // pivot is optional {x, y} in canvas coords; defaults to crop centre
+      const px = (pivot ? pivot.x : CROP_X + CROP_W / 2) - (CROP_X + CROP_W / 2);
+      const py = (pivot ? pivot.y : CROP_Y + CROP_H / 2) - (CROP_Y + CROP_H / 2);
+
+      const newScale = Math.max(
+        minScale(userPhoto),
+        Math.min(imgScale * factor, minScale(userPhoto) * 4)
+      );
+      // Adjust offset so the point under the pivot stays fixed
+      imgOffsetX = px + (imgOffsetX - px) * (newScale / imgScale);
+      imgOffsetY = py + (imgOffsetY - py) * (newScale / imgScale);
+      imgScale   = newScale;
+      clampOffset(userPhoto, imgScale);
+      renderBanner();
+    }
+
+    // ── Render ────────────────────────────────────────────────────────────
     function renderBanner() {
       ctx.clearRect(0, 0, SIZE, SIZE);
 
-      // 1. User photo as background
-      if (userPhoto) drawCoverFit(userPhoto);
+      if (userPhoto) {
+        // Clip to the photo area so the image never bleeds outside it
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(CROP_X, CROP_Y, CROP_W, CROP_H);
+        ctx.clip();
 
-      // 2. Overlay on top
+        const drawW = userPhoto.naturalWidth  * imgScale;
+        const drawH = userPhoto.naturalHeight * imgScale;
+        const drawX = CROP_X + CROP_W / 2 + imgOffsetX - drawW / 2;
+        const drawY = CROP_Y + CROP_H / 2 + imgOffsetY - drawH / 2;
+        ctx.drawImage(userPhoto, drawX, drawY, drawW, drawH);
+        ctx.restore();
+      }
+
+      // Overlay on top (covers everything outside the crop hole)
       if (overlayImage) {
         ctx.drawImage(overlayImage, 0, 0, SIZE, SIZE);
       } else {
@@ -462,10 +482,50 @@
       }
     }
 
-    // ── Handle selected/dropped file ──────────────────────────────────────
+    function drawPlaceholderOverlay() {
+      // Dark surround to show the crop area clearly
+      ctx.fillStyle = 'rgba(0,0,0,0.72)';
+      ctx.fillRect(0, 0, SIZE, SIZE);
+
+      // Clear the crop window so the photo shows through
+      ctx.clearRect(CROP_X, CROP_Y, CROP_W, CROP_H);
+
+      // Re-draw just the photo in that window (clip already removed above)
+      if (userPhoto) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(CROP_X, CROP_Y, CROP_W, CROP_H);
+        ctx.clip();
+        const drawW = userPhoto.naturalWidth  * imgScale;
+        const drawH = userPhoto.naturalHeight * imgScale;
+        const drawX = CROP_X + CROP_W / 2 + imgOffsetX - drawW / 2;
+        const drawY = CROP_Y + CROP_H / 2 + imgOffsetY - drawH / 2;
+        ctx.drawImage(userPhoto, drawX, drawY, drawW, drawH);
+        ctx.restore();
+      }
+
+      // Label
+      ctx.fillStyle = '#fdf45a';
+      ctx.font      = `900 ${SIZE * 0.045}px Inter, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('SERVICE DESIGN GEM BERLIN', SIZE / 2, SIZE - 100);
+      ctx.fillStyle = '#fff';
+      ctx.font      = `700 ${SIZE * 0.025}px Inter, sans-serif`;
+      ctx.fillText('Add overlay.png to see your full branding', SIZE / 2, SIZE - 48);
+    }
+
+    // ── Load new photo ────────────────────────────────────────────────────
+    function initPhoto(img) {
+      userPhoto  = img;
+      imgScale   = minScale(img);
+      imgOffsetX = 0;
+      imgOffsetY = 0;
+      renderBanner();
+    }
+
     function handleFile(file) {
       if (!file || !file.type.startsWith('image/')) return;
-
       spinnerOverlay.classList.add('active');
       previewSection.classList.add('visible');
 
@@ -473,8 +533,7 @@
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          userPhoto = img;
-          renderBanner();
+          initPhoto(img);
           spinnerOverlay.classList.remove('active');
           previewSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         };
@@ -484,27 +543,115 @@
       reader.readAsDataURL(file);
     }
 
-    // ── File input ────────────────────────────────────────────────────────
+    // ── Overlay preload ───────────────────────────────────────────────────
+    const overlayImg = new Image();
+    overlayImg.crossOrigin = 'anonymous';
+    overlayImg.onload  = () => { overlayImage = overlayImg; if (userPhoto) renderBanner(); };
+    overlayImg.onerror = () => console.warn('[Banner] overlay.png not found — placeholder shown.');
+    overlayImg.src = OVERLAY_URL;
+
+    // ── Coordinate helper ─────────────────────────────────────────────────
+    function toCanvasPx(clientX, clientY) {
+      const r = canvas.getBoundingClientRect();
+      return {
+        x: (clientX - r.left) * (SIZE / r.width),
+        y: (clientY - r.top)  * (SIZE / r.height),
+      };
+    }
+
+    // ── Mouse drag ────────────────────────────────────────────────────────
+    let isDragging = false;
+    let dragLast   = { x: 0, y: 0 };
+
+    canvas.addEventListener('mousedown', (e) => {
+      if (!userPhoto) return;
+      isDragging = true;
+      dragLast   = { x: e.clientX, y: e.clientY };
+      canvas.classList.add('dragging');
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging || !userPhoto) return;
+      const r  = canvas.getBoundingClientRect();
+      const px = SIZE / r.width;
+      imgOffsetX += (e.clientX - dragLast.x) * px;
+      imgOffsetY += (e.clientY - dragLast.y) * px;
+      dragLast = { x: e.clientX, y: e.clientY };
+      clampOffset(userPhoto, imgScale);
+      renderBanner();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      canvas.classList.remove('dragging');
+    });
+
+    // ── Scroll wheel zoom ─────────────────────────────────────────────────
+    canvas.addEventListener('wheel', (e) => {
+      if (!userPhoto) return;
+      e.preventDefault();
+      const pivot  = toCanvasPx(e.clientX, e.clientY);
+      const factor = e.deltaY < 0 ? 1.08 : 0.93;
+      applyZoom(factor, pivot);
+    }, { passive: false });
+
+    // ── Touch pan + pinch zoom ────────────────────────────────────────────
+    let lastTouches = [];
+
+    canvas.addEventListener('touchstart', (e) => {
+      if (!userPhoto) return;
+      e.preventDefault();
+      lastTouches = Array.from(e.touches);
+    }, { passive: false });
+
+    canvas.addEventListener('touchmove', (e) => {
+      if (!userPhoto) return;
+      e.preventDefault();
+      const touches = Array.from(e.touches);
+
+      if (touches.length === 1 && lastTouches.length >= 1) {
+        // Pan
+        const r  = canvas.getBoundingClientRect();
+        const px = SIZE / r.width;
+        imgOffsetX += (touches[0].clientX - lastTouches[0].clientX) * px;
+        imgOffsetY += (touches[0].clientY - lastTouches[0].clientY) * px;
+        clampOffset(userPhoto, imgScale);
+        renderBanner();
+
+      } else if (touches.length === 2 && lastTouches.length >= 2) {
+        // Pinch
+        const dist     = Math.hypot(touches[0].clientX - touches[1].clientX,     touches[0].clientY - touches[1].clientY);
+        const lastDist = Math.hypot(lastTouches[0].clientX - lastTouches[1].clientX, lastTouches[0].clientY - lastTouches[1].clientY);
+        if (lastDist > 0) {
+          // Pivot = midpoint of the two fingers
+          const midX = (touches[0].clientX + touches[1].clientX) / 2;
+          const midY = (touches[0].clientY + touches[1].clientY) / 2;
+          applyZoom(dist / lastDist, toCanvasPx(midX, midY));
+        }
+      }
+
+      lastTouches = touches;
+    }, { passive: false });
+
+    canvas.addEventListener('touchend',   (e) => { lastTouches = Array.from(e.touches); }, { passive: false });
+    canvas.addEventListener('touchcancel',(e) => { lastTouches = []; });
+
+    // ── Zoom buttons ──────────────────────────────────────────────────────
+    zoomInBtn.addEventListener('click',  () => { if (userPhoto) applyZoom(1.15); });
+    zoomOutBtn.addEventListener('click', () => { if (userPhoto) applyZoom(0.87); });
+
+    // ── File input & drag-drop ────────────────────────────────────────────
     fileInput.addEventListener('change', (e) => handleFile(e.target.files[0]));
 
-    // ── Drag & drop ───────────────────────────────────────────────────────
-    uploadZone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadZone.classList.add('drag-over');
-    });
-    ['dragleave', 'dragend'].forEach((evt) =>
-      uploadZone.addEventListener(evt, () => uploadZone.classList.remove('drag-over'))
-    );
+    uploadZone.addEventListener('dragover', (e) => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
+    ['dragleave','dragend'].forEach(ev => uploadZone.addEventListener(ev, () => uploadZone.classList.remove('drag-over')));
     uploadZone.addEventListener('drop', (e) => {
       e.preventDefault();
       uploadZone.classList.remove('drag-over');
       handleFile(e.dataTransfer.files[0]);
     });
 
-    // ── Keyboard accessibility for upload zone ────────────────────────────
-    uploadZone.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') fileInput.click();
-    });
+    uploadZone.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') fileInput.click(); });
 
     // ── Download ──────────────────────────────────────────────────────────
     downloadBtn.addEventListener('click', () => {
@@ -522,10 +669,7 @@
     });
 
     // ── Change photo ──────────────────────────────────────────────────────
-    changePhotoBtn.addEventListener('click', () => {
-      fileInput.value = '';
-      fileInput.click();
-    });
+    changePhotoBtn.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
   </script>
 </body>
 </html>
