@@ -186,7 +186,7 @@
       aspect-ratio: 1 / 1;
       overflow: hidden;
       position: relative;
-      background: #222;
+      background: #ffffff;
       touch-action: none;
     }
 
@@ -407,6 +407,7 @@
     // ─────────────────────────────────────────────────────────────────────────
     const OVERLAY_URL       = './overlay.png';
     const DOWNLOAD_FILENAME = 'sdgberlin-banner.png';
+    const CANVAS_BG         = '#ffffff'; // background colour behind the overlay
 
     const SIZE   = 1080;
     const CROP_W = 549.1;
@@ -468,6 +469,10 @@
     // ── Render ────────────────────────────────────────────────────────────
     function renderBanner() {
       ctx.clearRect(0, 0, SIZE, SIZE);
+
+      // Solid background so the exported PNG has no transparent/grey areas
+      ctx.fillStyle = CANVAS_BG;
+      ctx.fillRect(0, 0, SIZE, SIZE);
 
       if (userPhoto) {
         // Clip to the photo area so the image never bleeds outside it
