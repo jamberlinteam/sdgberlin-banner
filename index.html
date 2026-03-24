@@ -125,10 +125,10 @@
       color: var(--gray-dark);
     }
 
-    /* ── Steps ── */
+    /* ── Intro steps ── */
     .steps {
       display: flex;
-      margin-top: 20px;
+      margin-bottom: 24px;
       border: var(--border);
     }
 
@@ -161,6 +161,31 @@
       font-weight: 700;
       line-height: 1.3;
       padding-top: 3px;
+    }
+
+    /* ── Caption ── */
+    .caption-section {
+      margin-top: 32px;
+    }
+
+    .caption-textarea {
+      width: 100%;
+      border: var(--border);
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.6;
+      padding: 14px;
+      resize: vertical;
+      min-height: 110px;
+      color: var(--black);
+      background: var(--white);
+      display: block;
+      margin-bottom: 10px;
+    }
+
+    .caption-textarea:focus {
+      outline: 3px solid var(--cyan);
+      outline-offset: -3px;
     }
 
     /* ── Preview section ── */
@@ -325,16 +350,6 @@
     /* ── Responsive ── */
     @media (max-width: 420px) {
       body { padding: 20px 14px 40px; }
-
-      .steps { flex-direction: column; }
-
-      .step {
-        border-right: none;
-        border-bottom: var(--border);
-      }
-
-      .step:last-child { border-bottom: none; }
-
       .actions { flex-direction: column; }
     }
   </style>
@@ -345,7 +360,12 @@
     <div class="header">
       <span class="header-eyebrow">Service Design Gem Berlin</span>
       <h1>Create Your<br>Event Banner</h1>
-      <p class="subtitle">Upload your photo and get a personalised banner — ready to share on Instagram, LinkedIn, and beyond.</p>
+    </div>
+
+    <div class="steps" aria-hidden="true">
+      <div class="step"><div class="step-num">1</div><div class="step-label">Create your banner</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-label">Copy &amp; edit text</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-label">Post to LinkedIn, Instagram and beyond!</div></div>
     </div>
 
     <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="Upload your photo">
@@ -357,12 +377,6 @@
       </div>
       <div class="upload-text">Upload your photo</div>
       <div class="upload-hint">Drag &amp; drop or click to browse &nbsp;·&nbsp; JPG, PNG, WEBP</div>
-    </div>
-
-    <div class="steps" aria-hidden="true">
-      <div class="step"><div class="step-num">1</div><div class="step-label">Upload your photo</div></div>
-      <div class="step"><div class="step-num">2</div><div class="step-label">Adjust &amp; preview</div></div>
-      <div class="step"><div class="step-num">3</div><div class="step-label">Download &amp; share</div></div>
     </div>
 
     <div class="preview-section" id="previewSection" aria-live="polite">
@@ -386,6 +400,12 @@
         <button class="btn btn-primary"   id="downloadBtn">Download Banner</button>
         <button class="btn btn-secondary" id="changePhotoBtn">Change Photo</button>
       </div>
+    </div>
+
+    <div class="caption-section">
+      <div class="section-label">Your caption</div>
+      <textarea class="caption-textarea" id="captionText">I'm attending the Service Design Jam in Berlin between 24-26 April. I'm most looking forward to...  If you're going too, say hello! #ServiceDesignJamBerlin</textarea>
+      <button class="btn btn-secondary" id="copyBtn">Copy Caption</button>
     </div>
 
     <div class="footer">
@@ -685,6 +705,16 @@
 
     // ── Change photo ──────────────────────────────────────────────────────
     changePhotoBtn.addEventListener('click', () => { fileInput.value = ''; fileInput.click(); });
+
+    // ── Copy caption ──────────────────────────────────────────────────────
+    document.getElementById('copyBtn').addEventListener('click', function () {
+      const text = document.getElementById('captionText').value;
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = this.textContent;
+        this.textContent = 'Copied!';
+        setTimeout(() => { this.textContent = orig; }, 2000);
+      });
+    });
   </script>
 </body>
 </html>
